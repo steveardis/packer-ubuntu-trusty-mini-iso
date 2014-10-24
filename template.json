@@ -1,0 +1,44 @@
+{
+    "variables" : {
+        "disk_size" : "20480",
+        "disk_format" : "qcow2",
+        "ssh_username" : "snow",
+        "ssh_password" : "aoxmflrtm",
+        "hostname" : "sanity-test"
+    },
+    "description" : "Build Sanity Test VM",
+    "builders": [
+        {
+            "type" : "qemu",
+            "http_directory" : "http",
+            "iso_checksum" : "e0d579016f6304a819678aa407f66c9d18659caef6befda65423e692b76c2a618109a94deeed37afe8e1996670189320c1bdae33f6e31afadeebe5742eeb4632",
+            "iso_checksum_type" : "sha512",
+            "iso_url" : "xubuntu-14.04.1-desktop-amd64.iso",
+            "ssh_username" : "{{user `ssh_username`}}",
+            "ssh_password" : "{{user `ssh_password`}}",
+            "accelerator" : "kvm",
+            "boot_wait" : "2s",
+            "boot_command" : [
+                "<esc><esc><esc><enter><wait>",
+                "/casper/vmlinuz.efi noprompt ",
+                "url=http://{{.HTTPIP}}:{{.HTTPPort}}/xubuntu-preseed.cfg ",
+                "hostname={{user `hostname`}} ",
+                "automatic-ubiquity ",
+                "keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=us console-setup/ask_detect=false ",
+                "boot=casper initrd=/casper/initrd.lz splash persistent -- <enter>"
+            ],
+            "disk_size" : "{{user `disk_size`}}",
+            "format" : "{{user `disk_format`}}",
+            "headless" : false,
+            "shutdown_command" : "echo {{user `ssh_password`}} | sudo -S shutdown -P now",
+            "vm_name" : "sanitytest",
+            "qemuargs" : [
+                ["-vga", "qxl"]
+            ]
+        }
+    ],
+    "provisioners" : [
+    ],
+    "post-processors": [
+    ]
+}
