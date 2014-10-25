@@ -1,6 +1,6 @@
 # Introduction
 
-It is a packer template for building a xubuntu desktop from netboot iso.
+It is a packer template for building a xubuntu desktop qemu image with auto-login based on netboot iso.
 
 # Configure
 
