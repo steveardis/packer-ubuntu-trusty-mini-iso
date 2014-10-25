@@ -2,39 +2,42 @@
     "variables" : {
         "disk_size" : "20480",
         "disk_format" : "qcow2",
-        "ssh_username" : "snow",
-        "ssh_password" : "aoxmflrtm",
-        "hostname" : "sanity-test"
+        "ssh_username" : "packer",
+        "ssh_password" : "packer",
+        "hostname" : "ubuntu"
     },
-    "description" : "Build Sanity Test VM",
+    "description" : "Build a Xubuntu Virtual Machine",
     "builders": [
         {
             "type" : "qemu",
+            "name" : "from-netboot-iso",
             "http_directory" : "http",
-            "iso_checksum" : "e0d579016f6304a819678aa407f66c9d18659caef6befda65423e692b76c2a618109a94deeed37afe8e1996670189320c1bdae33f6e31afadeebe5742eeb4632",
-            "iso_checksum_type" : "sha512",
-            "iso_url" : "xubuntu-14.04.1-desktop-amd64.iso",
+            "iso_checksum" : "bc09966b54f91f62c3c41fc14b76f2baa4cce48595ce22e8c9f24ab21ac8d965",
+            "iso_checksum_type" : "sha256",
+            "iso_url" : "http://archive.ubuntu.com/ubuntu/dists/trusty/main/installer-amd64/current/images/netboot/mini.iso",
             "ssh_username" : "{{user `ssh_username`}}",
             "ssh_password" : "{{user `ssh_password`}}",
             "accelerator" : "kvm",
-            "boot_wait" : "2s",
+            "boot_wait" : "3s",
             "boot_command" : [
-                "<esc><esc><esc><enter><wait>",
-                "/casper/vmlinuz.efi noprompt ",
-                "url=http://{{.HTTPIP}}:{{.HTTPPort}}/xubuntu-preseed.cfg ",
+                "<esc><wait>",
+                "/linux noapic preseed/url=http://{{.HTTPIP}}:{{.HTTPPort}}/preseed.cfg ",
                 "hostname={{user `hostname`}} ",
-                "automatic-ubiquity ",
-                "keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=us console-setup/ask_detect=false ",
-                "boot=casper initrd=/casper/initrd.lz splash persistent -- <enter>"
+                "debian-installer=en_US auto locale=en_US kbd-chooser/method=us ",
+                "fb=false ",
+                "keyboard-configuration/modelcode=SKIP keyboard-configuration/layout=USA ",
+                "keyboard-configuration/variant=USA console-setup/ask_detect=false ",
+                "initrd=/initrd.gz -- <enter>"
             ],
             "disk_size" : "{{user `disk_size`}}",
             "format" : "{{user `disk_format`}}",
             "headless" : false,
             "shutdown_command" : "echo {{user `ssh_password`}} | sudo -S shutdown -P now",
-            "vm_name" : "sanitytest",
+            "vm_name" : "ubuntu",
             "qemuargs" : [
                 ["-vga", "qxl"]
-            ]
+            ],
+            "ssh_wait_timeout" : "120m"
         }
     ],
     "provisioners" : [
