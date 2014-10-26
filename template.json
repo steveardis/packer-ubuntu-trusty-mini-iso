@@ -53,7 +53,10 @@
         {
             "type": "shell",
             "execute_command" : "echo {{user `ssh_password`}} | {{ .Vars }} sudo -E -S sh '{{ .Path }}'",
-            "inline" : ["mkdir /etc/salt", "mv /tmp/grains /etc/salt", "chown root:root /etc/salt/grains"]
+            "inline" : [
+                "mkdir /etc/salt", "mv /tmp/grains /etc/salt", "chown root:root /etc/salt/grains",
+                "apt-get -y install salt-minion"
+            ]
         }
     ],
     "post-processors": [
