@@ -43,7 +43,7 @@
     "provisioners" : [
         {
             "type": "shell",
-            "inline": ["sleep 20"]
+            "inline": ["sleep 10"]
         },
         {
             "type": "file",
